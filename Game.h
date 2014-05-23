@@ -7,7 +7,6 @@
 
 #ifndef GAME_H
 #define	GAME_H
-#include "Player.h"
 #include "CardSet.h"
 #include <string>
 #include <list>
@@ -16,7 +15,7 @@ using namespace std;
 
 class Game {
 public:
-    Player** players;
+    CardSet** players;
     int playersCnt;
     CardSet table;
     int turnCounter;
