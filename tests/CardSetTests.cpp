@@ -10,14 +10,13 @@
 #include "CardSet.h"
 #include "Constants.h"
 
+int cards[] = {ACE, KING, CARD_8, CARD_10, JACK, CARD_2, CARD_9, CARD_5, QUEEN};
+int suits[] = {CLUBS, DIAMONDS, SPADES, HEARTS, DIAMONDS, CLUBS, SPADES, CLUBS, HEARTS};
+string cardStrings[] = {"Ac", "Kd", "8s", "0h", "Jd", "2c", "9s", "5c", "Qh"};
 /*
  * Simple C++ Test Suite
  */
 CardSet cardSet;
-int cards[] = {ACE, KING, CARD_8, CARD_10, JACK, CARD_2, CARD_9, CARD_5, QUEEN};
-int suits[] = {CLUBS, DIAMONDS, SPADES, HEARTS, DIAMONDS, CLUBS, SPADES, CLUBS, HEARTS};
-string cardStrings[] = {"Ac", "Kd", "8s", "0h", "Jd", "2c", "9s", "5c", "Qh"};
-
 void cardToStrTest() {
     string result;
     for (int i = 0; i<sizeof (cards) / sizeof (int); i++) {

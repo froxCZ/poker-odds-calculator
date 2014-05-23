@@ -25,18 +25,24 @@ Game::~Game() {
     for (int i = 0; i < playersCnt; i++)delete players[i];
     delete[] players;
 }
+
+void Game::SetRiver(string card){
+    table.AddCard(card);
+}
+
 void Game::SetHand(string card1, string card2){
     players[0]->AddCard(card1);
     players[0]->AddCard(card2);
 }
 
 std::ostream& operator<<(std::ostream& os, const Game& game) {
-    os << "Table: \t" << game.table << endl;
+    os << "Table:\t\t" << game.table << endl;
     stringstream idStr;
     for(int i=0;i<game.playersCnt;i++){        
         idStr.str("");
         idStr.clear();
         idStr << i;
-        os << "player"<<idStr.str()<<"\t"<<*(game.players[i])<<endl;
+        os << "player"<<idStr.str()<<":\t"<<*(game.players[i])<<endl;
     }
+    return os;
 }

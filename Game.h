@@ -30,7 +30,7 @@ public:
     void StartGame(); //reset variables, deals cards, puts 3 cards on river    
     void FinishGame(); //runs turns to finish the game and prints results and winner.
     void SetHand(string card1, string card2);
-    void SetRiver(string cards[], int cardsCnt);
+    void SetRiver(string card);
 private:
     void RunTurn(); //does one turn. If game finished, does nothing.
     int GetCardFromDeck();
