@@ -26,6 +26,8 @@ Game::~Game() {
     delete[] players;
 }
 void Game::SetHand(string card1, string card2){
+    players[0]->AddCard(card1);
+    players[0]->AddCard(card2);
 }
 
 std::ostream& operator<<(std::ostream& os, const Game& game) {

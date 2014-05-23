@@ -15,7 +15,7 @@ using namespace std;
  * 
  */
 int main(int argc, char** argv) {
-    Game game(3);
+    Game game(1);
     cout << game;
     return 0;
 }

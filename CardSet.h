@@ -18,13 +18,14 @@ class CardSet {
 public:
     int cards[CARDS_CNT];
     int suits[SUITS_CNT];    
-    int set[CARDS_CNT][SUITS_CNT];
+    bool availableCards[CARDS_CNT][SUITS_CNT];
     int cardsCnt;   
     int id;
     CardSet();
     CardSet(int id);
     CardSet(const CardSet& orig);
-    void AddCard(string card);
+    void Reset();
+    void AddCard(string cardStr);
     int evaluate();
     virtual ~CardSet();
     friend std::ostream& operator<<(std::ostream& os, const CardSet& obj);
