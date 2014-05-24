@@ -9,7 +9,9 @@
 
 #include "CardSet.h"
 
-CardSet::CardSet():CardSet(-1) {
+CardSet::CardSet() {
+    this->id = -1;
+    Reset();
 }
 
 CardSet::CardSet(int id) {
@@ -22,49 +24,154 @@ CardSet::CardSet(const CardSet& orig) {
 
 CardSet::~CardSet() {
 }
-void CardSet::Reset(){
-    memset(cards,0,CARDS_CNT*sizeof(int));
-    memset(suits,0,SUITS_CNT*sizeof(int));
-    for(int i=0;i<CARDS_CNT;i++){
-        for(int j=0;j<SUITS_CNT;j++){
+
+void CardSet::Reset() {
+    memset(ranks, 0, CARDS_CNT * sizeof (int));
+    memset(suits, 0, SUITS_CNT * sizeof (int));
+    for (int i = 0; i < CARDS_CNT; i++) {
+        for (int j = 0; j < SUITS_CNT; j++) {
             availableCards[i][j] = false;
         }
     }
-    
+
 }
-void CardSet::AddCard(string cardStr){
-    int card,suit;
-    if(StrToCard(cardStr,card,suit) == false) return;
-    cards[card]++;
+
+void CardSet::AddCard(string cardStr) {
+    int card, suit;
+    if (StrToCard(cardStr, card, suit) == false) return;
+    ranks[card]++;
     suits[suit]++;
     availableCards[card][suit] = true;
     cardsCnt++;
 }
-bool CardSet::StrToCard(string& str, int& card, int& suit) {
+
+int CardSet::GetFigureRank() {
+    int score = 0;
+    if (score = GotStraightFlush())return score;
+    if (score = GotPoker())return score;
+    if (score = GotFullHouse())return score;
+    if (score = GotFlush())return score;
+    if (score = GotStraight())return score;
+    if (score = GotThree())return score;
+    if (score = GotTwoPairs())return score;
+    if (score = GotOnePair())return score;
+    if (score = GotHighCard())return score;
+    cout << "internal error: end of evaluate - should not happen!" << endl;
+    return 0;
+}
+
+int CardSet::GotStraightFlush() {
+    for (int iSuit = 0; iSuit < SUITS_CNT; iSuit++) {
+        bool gotFigure = false;
+        int seqCnt = 0;
+        int iRank = ACE;
+        for (; iRank >= CARD_2; iRank--) {
+            if (availableCards[iRank][iSuit] == true) {
+                seqCnt++;
+                if (seqCnt == 5) {
+                    gotFigure = true;
+                    break;
+                }
+            } else {
+                seqCnt = 0;
+            }
+        }
+        if (gotFigure)return STRAIGHT_FLUSH + iRank;
+    }
+}
+
+int CardSet::GotPoker() {
+    int iRank = ACE;
+    bool gotFigure = false;
+    for (; iRank >= CARD_2; iRank--) {
+        if (ranks[iRank] == 4) {
+            gotFigure = true;
+            break;
+        }
+    }
+    if (gotFigure)return POKER + iRank;
+    return 0;
+}
+
+int CardSet::GotFullHouse() {
+    int twoRank = -1;
+    int threeRank = -1;
+    for (int iRank = ACE; iRank >= CARD_2; iRank--) {
+        if (ranks[iRank] >= 3 && threeRank == -1) {
+            threeRank = iRank;
+        } else if (ranks[iRank] >= 2 && twoRank == -1) {
+            twoRank = iRank;
+        }
+    }
+    if (threeRank != -1 && twoRank != -1) {
+        return FULL_HOUSE + threeRank * 100 + twoRank;
+    }
+    return 0;
+}
+
+int CardSet::GotFlush() {
+    int bestFlushRank = 0;
+    for (int iSuit = 0; iSuit < SUITS_CNT; iSuit++) {
+        if (suits[iSuit] >= 5) {            
+            int flushRank = FLUSH;
+            int cardVal = 10000;
+            for (int iRank = ACE; iRank >= CARD_2 && cardVal > 0; iRank--) {
+                if (availableCards[iRank][iSuit] == true) {
+                    flushRank += cardVal*iRank;
+                    cardVal /= 10;
+                }
+            }            
+            if (flushRank > bestFlushRank)bestFlushRank = flushRank;
+        }
+    }
+    return bestFlushRank;
+}
+
+int CardSet::GotStraight() {
+    return 0;
+}
+
+int CardSet::GotThree() {
+    return 0;
+}
+
+int CardSet::GotTwoPairs() {
+    return 0;
+}
+
+int CardSet::GotOnePair() {
+    return 0;
+}
+
+int CardSet::GotHighCard() {
+    return 0;
+}
+
+bool CardSet::StrToCard(string& str, int& rank, int& suit) {
     if (str.length() != 2) {
         cout << "strToCard error" << endl;
         return false;
     }
     char cardChar = str[0];
     char suitChar = str[1];
-    if (cardChar >= '2' && cardChar<= '9') {
-        card = cardChar - '0' - 2;
+    if (cardChar >= '2' && cardChar <= '9') {
+        rank = cardChar - '0' - 2;
     } else {
         switch (cardChar) {
             case '0':
-                card = CARD_10;
+                rank = CARD_10;
                 break;
             case 'J':
-                card = JACK;
+                rank = JACK;
                 break;
             case 'Q':
-                card = QUEEN;
+                rank = QUEEN;
                 break;
             case 'K':
-                card = KING;
+                rank = KING;
                 break;
             case 'A':
-                card = ACE;
+                rank = ACE;
                 break;
             default:
                 cout << "strToCard error" << endl;
@@ -88,14 +195,14 @@ bool CardSet::StrToCard(string& str, int& card, int& suit) {
     return true;
 }
 
-string CardSet::CardToStr(int card, int suit) {
+string CardSet::CardToStr(int rank, int suit) {
     string cardStr;
-    if (card >= 0 && card <= 7) {
+    if (rank >= 0 && rank <= 7) {
         stringstream tmpSs;
-        tmpSs << card+2;
+        tmpSs << rank + 2;
         cardStr.append(tmpSs.str());
     } else {
-        switch (card) {
+        switch (rank) {
             case CARD_10:
                 cardStr.append("0");
                 break;
@@ -131,10 +238,10 @@ string CardSet::CardToStr(int card, int suit) {
 }
 
 std::ostream& operator<<(std::ostream& os, const CardSet& cardSet) {
-    for(int i=0;i<CARDS_CNT;i++){
-        for(int j=0;j<SUITS_CNT;j++){
-            if(cardSet.availableCards[i][j] == true)
-                os << cardSet.CardToStr(i,j)<<" ";
+    for (int i = 0; i < CARDS_CNT; i++) {
+        for (int j = 0; j < SUITS_CNT; j++) {
+            if (cardSet.availableCards[i][j] == true)
+                os << cardSet.CardToStr(i, j) << " ";
         }
     }
     return os;
