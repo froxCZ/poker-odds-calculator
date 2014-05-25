@@ -19,16 +19,19 @@ public:
     CardSet table;
     int turnCounter;
     bool playedCards[CARDS_CNT][SUITS_CNT];
+    bool setHandToOther;
+    int sharedCards;
     Game(int playersCnt);
     Game(const Game& orig);
     virtual ~Game();
     friend std::ostream& operator<<(std::ostream& os, const Game& obj);
-    void RunSimulation();
     void Reset(); //reset variables, deals cards, puts 3 cards on river    
-    void FinishGame(); //runs turns to finish the game and prints results and winner.
+    int FinishGame(bool verbose); //runs turns to finish the game and returns winnerId. (O == me!!)
     void SetHand(string card1, string card2);
     void SetHandToOthers();
     void SetFlop(string card1,string card2,string card3);
+    bool AddSharedCard(string card);
+    bool AddSharedCard(int rank, int suit);
     void SetCardToPlayer(CardSet*player,int rank, int suit);
 private:
     void SetCardToAll(int rank,int suit);

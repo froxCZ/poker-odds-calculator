@@ -30,6 +30,7 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const CardSet& obj);
     static bool StrToCard(string&str,int&rank,int&suit);
     static string CardToStr(int rank,int suit);    
+    static string GetScoreName(int score);
 private:
     int GotStraightFlush();
     int GotPoker();
@@ -42,7 +43,7 @@ private:
     int GotHighCard();
     int GotN(int n);
     int GetNonFigureHighestCard(int rank, int nToFind);
-    inline void ModyfiScoreByCardSignificance(int& score,int rank, int significance);
+    inline void ModyfiScoreByCardSignificance(int& score,int rank, int significance);    
    
 
 };

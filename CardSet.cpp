@@ -324,7 +324,17 @@ string CardSet::CardToStr(int rank, int suit) {
     }
     return cardStr;
 }
-
+string CardSet::GetScoreName(int score){
+    if(score <= ONE_PAIR)return "high card";
+    if(score <= TWO_PAIRS)return "one pair";
+    if(score <= THREE)return "two pairs";
+    if(score <= STRAIGHT)return "three";
+    if(score <= FLUSH)return "straight";
+    if(score <= FULL_HOUSE)return "flush";
+    if(score <= POKER)return "full house";
+    if(score <= STRAIGHT_FLUSH)return "poker";
+    return "straight flush";
+}
 inline void CardSet::ModyfiScoreByCardSignificance(int& score, int rank, int significance) {
     score |= rank << ((significance - 1) * 4);
 }

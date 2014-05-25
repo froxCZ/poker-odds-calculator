@@ -39,21 +39,59 @@ void Game::Reset() {
         }
     }
     turnCounter = START;
+    setHandToOther = false;
+    sharedCards = 0;
 }
 
 void Game::SetFlop(string card1, string card2, string card3) {
     int rank, suit;
-    if (CardSet::StrToCard(card1, rank, suit) == false)return;
-    SetCardToAll(rank, suit);
-    if (CardSet::StrToCard(card2, rank, suit) == false)return;
-    SetCardToAll(rank, suit);
-    if (CardSet::StrToCard(card3, rank, suit) == false)return;
-    SetCardToAll(rank, suit);
     if (turnCounter != HAND_SET) {
         cout << "internal error - SetFlop NOT called after SetHand" << endl;
         return;
     }
-    turnCounter = FLOP_SET;
+    if (AddSharedCard(card1) &&
+            AddSharedCard(card2) &&
+            AddSharedCard(card3)) {
+        turnCounter = FLOP_SET;
+    } else {
+        cout << "could not set flop" << endl;
+    }
+}
+
+bool Game::AddSharedCard(string card) {
+    int rank, suit;
+    if (CardSet::StrToCard(card, rank, suit) == false)return false;
+    AddSharedCard(rank, suit);
+    return true;
+}
+
+bool Game::AddSharedCard(int rank, int suit) {
+    SetCardToAll(rank, suit);
+    sharedCards++;
+    return true;
+}
+
+int Game::FinishGame(bool verbose) {
+    while (RunTurn());
+    if (setHandToOther == false)SetHandToOthers();
+    int maxScore = players[0]->GetFigureScore();
+    int winnerId = 0;
+    for (int i = 1; i < playersCnt; i++) {
+        int otherScore = players[i]->GetFigureScore();
+        if (otherScore > maxScore) {
+            maxScore = otherScore;
+            winnerId = i;
+        }
+    }
+    if (verbose) {
+        if (winnerId == 0) {
+            cout << "I won with ";
+        } else {
+            cout << "player" << winnerId << " won with ";
+        }
+        cout << CardSet::GetScoreName(maxScore) << "!" << endl;
+    }
+    return winnerId;
 }
 
 void Game::SetHand(string card1, string card2) {
@@ -66,7 +104,7 @@ void Game::SetHand(string card1, string card2) {
 }
 
 void Game::SetHandToOthers() {
-    int rank,suit;
+    int rank, suit;
     for (int iPlayer = 1; iPlayer < playersCnt; iPlayer++) {
         DrawCard(rank, suit);
         SetCardToPlayer(players[iPlayer], rank, suit);
@@ -88,14 +126,19 @@ void Game::SetCardToAll(int rank, int suit) {
 }
 
 bool Game::RunTurn() {
-
-
+    int rank, suit;
+    if (sharedCards != 5) {
+        DrawCard(rank, suit);
+        AddSharedCard(rank, suit);
+        return true;
+    }
+    return false;
 }
 
 void Game::DrawCard(int& rank, int& suit) {
     do {//TODO: can get to infinite loop if all cards are drawn.
         rank = GenerateRandom(CARD_2, ACE);
-        suit = GenerateRandom(0, SUITS_CNT);
+        suit = GenerateRandom(0, 3);
     } while (playedCards[rank][suit] == true);
     playedCards[rank][suit] = true;
 }
