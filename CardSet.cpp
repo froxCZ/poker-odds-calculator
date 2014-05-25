@@ -129,21 +129,20 @@ int CardSet::GotFullHouse() {
 }
 
 int CardSet::GotFlush() {
-    int bestFlushRank = 0;
+    int score=0;    
     for (int iSuit = 0; iSuit < SUITS_CNT; iSuit++) {
         if (suits[iSuit] >= 5) {
-            int flushRank = FLUSH;
-            int cardVal = 10000;
-            for (int iRank = ACE; iRank >= CARD_2 && cardVal > 0; iRank--) {
+            score+=FLUSH;
+            int toFind = 5;
+            for (int iRank = ACE; iRank >= CARD_2 && toFind>0; iRank--) {
                 if (availableCards[iRank][iSuit] == true) {
-                    flushRank += cardVal*iRank;
-                    cardVal /= 10;
+                    ModyfiScoreByCardSignificance(score,iRank,toFind--);
                 }
             }
-            if (flushRank > bestFlushRank)bestFlushRank = flushRank;
+            break;
         }
     }
-    return bestFlushRank;
+    return score;
 }
 
 int CardSet::GotStraight() {
@@ -227,7 +226,7 @@ int CardSet::GetNonFigureHighestCard(int rank, int nToFind) {
     int score = 0;
     for (int iRank = ACE; iRank >= CARD_2 && nToFind > 0; iRank--) {
         if (iRank != rank && ranks[iRank] >= 1) {
-            ModyfiScoreByCardSignificance(score, rank, nToFind--);
+            ModyfiScoreByCardSignificance(score, iRank, nToFind--);
         }
     }
     return score;

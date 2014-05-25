@@ -102,8 +102,6 @@ void ComplexScoreTests() {
     set2.AddCard("9c");
     set2.AddCard("Jh");
     set2.AddCard("Ad");
-    cout << set1.GetFigureScore() << endl;
-    cout << set2.GetFigureScore() << endl;
     if (set1.GetFigureScore() <= set2.GetFigureScore()) {
         std::cout << "%TEST_FAILED% time=0 testname=ComplexScoreTests (CardSetTests) message=AddHand failed. Expected hand should be: " << set1 << endl;
     }
@@ -293,6 +291,25 @@ void FigureRankPairs() {
     if (set1.GetFigureScore() <= set2.GetFigureScore()) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankTest (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }
+    set1.Reset();
+    set2.Reset();
+    set1.AddCard("Ad");
+    set1.AddCard("0s");
+    set1.AddCard("0c");
+    set1.AddCard("9s");
+    set1.AddCard("8h");
+
+    set2.AddCard("Ad");
+    set2.AddCard("Qc");
+    set2.AddCard("0s");
+    set2.AddCard("0c");
+    set2.AddCard("Js");
+    cout << set1.GetFigureScore()<<endl;
+    cout << set2.GetFigureScore()<<endl;
+    if (set1.GetFigureScore() >= set2.GetFigureScore()) {
+        std::cout << "%TEST_FAILED% time=0 testname=FigureRankTest (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
+    }
+
 
 }
 
