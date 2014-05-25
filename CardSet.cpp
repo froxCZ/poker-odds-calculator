@@ -35,13 +35,16 @@ void CardSet::Reset() {
     }
 
 }
-
 void CardSet::AddCard(string cardStr) {
-    int card, suit;
-    if (StrToCard(cardStr, card, suit) == false) return;
-    ranks[card]++;
+    int rank, suit;
+    if (StrToCard(cardStr, rank, suit) == false) return;
+    AddCard(rank,suit);
+}
+
+void CardSet::AddCard(int rank,int suit) {
+    ranks[rank]++;
     suits[suit]++;
-    availableCards[card][suit] = true;
+    availableCards[rank][suit] = true;
     cardsCnt++;
 }
 

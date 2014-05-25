@@ -51,12 +51,38 @@ void Game::SetFlop(string card) {
 }
 
 void Game::SetHand(string card1, string card2) {
-    players[0]->AddCard(card1);
-    players[0]->AddCard(card2);
+    int rank,suit;    
+    if(CardSet::StrToCard(card1,rank,suit)==false)return;
+    SetPlayerCard(players[0],rank,suit);    
+    if(CardSet::StrToCard(card2,rank,suit)==false)return;
+    SetPlayerCard(players[0],rank,suit);
+    for(int iPlayer=1;iPlayer<playersCnt;iPlayer++){        
+        DrawCard(rank,suit);
+        SetPlayerCard(players[iPlayer],rank,suit);
+        DrawCard(rank,suit);
+        SetPlayerCard(players[iPlayer],rank,suit);        
+    }
     turnCounter = HAND_SET;
+}
+void Game::SetPlayerCard(CardSet*player,int rank, int suit){
+    player->AddCard(rank,suit);
+    playedCards[rank][suit] = true;
+}
+bool Game::RunTurn() {
+
+
+}
+
+void Game::DrawCard(int& rank, int& suit) {
+    do {//TODO: can get to infinite loop if all cards are drawn.
+        rank = GenerateRandom(CARD_2, ACE);
+        suit = GenerateRandom(0, SUITS_CNT);
+    } while (playedCards[rank][suit] == true);
+    playedCards[rank][suit] = true;    
 }
 
 inline int Game::GenerateRandom(int from, int to) {
+    to++;
     return rand() % (to - from) + from;
 }
 
