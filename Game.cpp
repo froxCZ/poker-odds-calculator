@@ -9,7 +9,6 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-
 Game::Game(int playersCnt) {
     this->playersCnt = playersCnt;
     players = new CardSet*[playersCnt];
