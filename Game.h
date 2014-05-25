@@ -12,30 +12,26 @@
 #include <list>
 
 using namespace std;
-
 class Game {
 public:
     CardSet** players;
     int playersCnt;
     CardSet table;
     int turnCounter;
-    list<int> playedCardsIndexes;
-    //we keep track of played cards, instead of cards left, since amount of played cards will be lower than stack stacks -> faster to search
-    static char cardsIndex[52];
+    bool playedCards[CARDS_CNT][SUITS_CNT];
     Game(int playersCnt);
     Game(const Game& orig);
     virtual ~Game();
     friend std::ostream& operator<<(std::ostream& os, const Game& obj);
     void RunSimulation();
-    void StartGame(); //reset variables, deals cards, puts 3 cards on river    
+    void Reset(); //reset variables, deals cards, puts 3 cards on river    
     void FinishGame(); //runs turns to finish the game and prints results and winner.
     void SetHand(string card1, string card2);
-    void SetRiver(string card);
+    void SetFlop(string card);
 private:
-    void RunTurn(); //does one turn. If game finished, does nothing.
-    int GetCardFromDeck();
-    void CardToRiver();
-    inline short GenerateRandom(int from, int to);
+    bool RunTurn(); //does one turn and returns true. If game finished, returns false
+    void CardToTable();
+    inline int GenerateRandom(int from, int to);
 };
 /*
  * Card representation for indexing:

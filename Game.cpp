@@ -8,6 +8,7 @@
 #include "Game.h"
 #include <iostream>
 #include <stdio.h>
+#include <stdlib.h>
 
 Game::Game(int playersCnt) {
     this->playersCnt = playersCnt;
@@ -15,6 +16,7 @@ Game::Game(int playersCnt) {
     for (int i = 0; i < playersCnt; i++) {
         players[i] = new CardSet(i);
     }
+    Reset();
 }
 
 Game::Game(const Game& orig) {
@@ -26,23 +28,46 @@ Game::~Game() {
     delete[] players;
 }
 
-void Game::SetRiver(string card){
-    table.AddCard(card);
+void Game::Reset() {
+    for (int i = 0; i < playersCnt; i++) {
+        players[i]->Reset();
+    }
+    table.Reset();
+    for (int iRank = ACE; iRank >= CARD_2; iRank--) {
+        for (int iSuit = 0; iSuit < 4; iSuit++) {
+            playedCards[iRank][iSuit] = false;
+        }
+    }
+    turnCounter = START;
 }
 
-void Game::SetHand(string card1, string card2){
+void Game::SetFlop(string card) {
+    table.AddCard(card);
+    if (turnCounter != HAND_SET) {
+        cout << "internal error - SetFlop NOT called after SetHand" << endl;
+        return;
+    }
+    turnCounter = FLOP_SET;
+}
+
+void Game::SetHand(string card1, string card2) {
     players[0]->AddCard(card1);
     players[0]->AddCard(card2);
+    turnCounter = HAND_SET;
+}
+
+inline int Game::GenerateRandom(int from, int to) {
+    return rand() % (to - from) + from;
 }
 
 std::ostream& operator<<(std::ostream& os, const Game& game) {
     os << "Table:\t\t" << game.table << endl;
     stringstream idStr;
-    for(int i=0;i<game.playersCnt;i++){        
+    for (int i = 0; i < game.playersCnt; i++) {
         idStr.str("");
         idStr.clear();
         idStr << i;
-        os << "player"<<idStr.str()<<":\t"<<*(game.players[i])<<endl;
+        os << "player" << idStr.str() << ":\t" << *(game.players[i]) << endl;
     }
     return os;
 }
