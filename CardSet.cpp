@@ -83,28 +83,43 @@ int CardSet::GotStraightFlush() {
 int CardSet::GotPoker() {
     int iRank = ACE;
     bool gotFigure = false;
+    int pokerRank = 0;
     for (; iRank >= CARD_2; iRank--) {
         if (ranks[iRank] == 4) {
             gotFigure = true;
+            pokerRank = iRank;
             break;
         }
     }
-    if (gotFigure)return POKER + iRank;
+    if (gotFigure) {
+        int score = POKER;
+        ModyfiScoreByCardSignificance(score,pokerRank,2);
+        for (int iRank = ACE; iRank >= CARD_2; iRank--) {
+            if (iRank != pokerRank && ranks[iRank] >= 1) {
+                ModyfiScoreByCardSignificance(score,iRank,1);
+                break;
+            }
+        }
+        return score;
+    }
     return 0;
 }
 
 int CardSet::GotFullHouse() {
-    int twoRank = -1;
-    int threeRank = -1;
+    int twoRank = 0;
+    int threeRank = 0;
     for (int iRank = ACE; iRank >= CARD_2; iRank--) {
-        if (ranks[iRank] >= 3 && threeRank == -1) {
+        if (ranks[iRank] >= 3 && threeRank == 0) {
             threeRank = iRank;
-        } else if (ranks[iRank] >= 2 && twoRank == -1) {
+        } else if (ranks[iRank] >= 2 && twoRank == 0) {
             twoRank = iRank;
         }
     }
-    if (threeRank != -1 && twoRank != -1) {
-        return FULL_HOUSE + threeRank * 100 + twoRank;
+    if (threeRank > 0 && twoRank > 0) {
+        int score = FULL_HOUSE;
+        ModyfiScoreByCardSignificance(score, threeRank, 2);
+        ModyfiScoreByCardSignificance(score, twoRank, 1);
+        return score;
     }
     return 0;
 }
@@ -112,7 +127,7 @@ int CardSet::GotFullHouse() {
 int CardSet::GotFlush() {
     int bestFlushRank = 0;
     for (int iSuit = 0; iSuit < SUITS_CNT; iSuit++) {
-        if (suits[iSuit] >= 5) {            
+        if (suits[iSuit] >= 5) {
             int flushRank = FLUSH;
             int cardVal = 10000;
             for (int iRank = ACE; iRank >= CARD_2 && cardVal > 0; iRank--) {
@@ -120,7 +135,7 @@ int CardSet::GotFlush() {
                     flushRank += cardVal*iRank;
                     cardVal /= 10;
                 }
-            }            
+            }
             if (flushRank > bestFlushRank)bestFlushRank = flushRank;
         }
     }
@@ -128,23 +143,90 @@ int CardSet::GotFlush() {
 }
 
 int CardSet::GotStraight() {
+    int seqCnt = 0;
+    for (int iRank = ACE; iRank >= CARD_2; iRank--) {
+        if (ranks[iRank]) {
+            seqCnt++;
+            if (seqCnt == 5) {
+                return STRAIGHT + iRank;
+            }
+        } else {
+            seqCnt = 0;
+        }
+    }
+
     return 0;
 }
 
 int CardSet::GotThree() {
-    return 0;
+    int rank;
+    if (rank = GotN(3)) {
+        int score = THREE;
+        ModyfiScoreByCardSignificance(score, rank, 3);
+        score += GetNonFigureHighestCard(rank, 2);
+        return score;
+    } else {
+        return 0;
+    }
+
+
 }
 
 int CardSet::GotTwoPairs() {
+    int score = 0;
+    int pairsToFind = 2;
+    int otherToFind = 1;
+    for (int iRank = ACE; iRank >= CARD_2; iRank--) {
+        if (ranks[iRank] >= 2 && pairsToFind > 0) {
+            ModyfiScoreByCardSignificance(score, iRank, pairsToFind + 1);
+            pairsToFind--;
+        } else if (ranks[iRank] == 1 && otherToFind > 0) {
+            ModyfiScoreByCardSignificance(score, iRank, otherToFind--);
+        }
+    }
+    if (pairsToFind == 0)return score;
     return 0;
 }
 
 int CardSet::GotOnePair() {
+    int rank;
+    if (rank = GotN(2)) {
+        int score = ONE_PAIR;
+        ModyfiScoreByCardSignificance(score, rank, 4);
+        score += GetNonFigureHighestCard(rank, 3);
+        return score;
+    }
     return 0;
 }
 
 int CardSet::GotHighCard() {
+    int score = 0;
+    int toFind = 5;
+    for (int iRank = ACE; iRank >= CARD_2 && toFind > 0; iRank--) {
+        if (ranks[iRank] >= 1) {
+            ModyfiScoreByCardSignificance(score, iRank, toFind--);
+        }
+    }
+    return score;
+}
+
+int CardSet::GotN(int n) {
+    for (int iRank = ACE; iRank >= CARD_2; iRank--) {
+        if (ranks[iRank] >= n) {
+            return iRank;
+        }
+    }
     return 0;
+}
+
+int CardSet::GetNonFigureHighestCard(int rank, int nToFind) {
+    int score = 0;
+    for (int iRank = ACE; iRank >= CARD_2 && nToFind > 0; iRank--) {
+        if (iRank != rank && ranks[iRank] >= 1) {
+            ModyfiScoreByCardSignificance(score, rank, nToFind--);
+        }
+    }
+    return score;
 }
 
 bool CardSet::StrToCard(string& str, int& rank, int& suit) {
@@ -155,7 +237,7 @@ bool CardSet::StrToCard(string& str, int& rank, int& suit) {
     char cardChar = str[0];
     char suitChar = str[1];
     if (cardChar >= '2' && cardChar <= '9') {
-        rank = cardChar - '0' - 2;
+        rank = cardChar - '0' - 1;
     } else {
         switch (cardChar) {
             case '0':
@@ -191,15 +273,18 @@ bool CardSet::StrToCard(string& str, int& rank, int& suit) {
         case 's':
             suit = SPADES;
             break;
+        default:
+            cout << "strToCard error" << endl;
+            return false;
     }
     return true;
 }
 
 string CardSet::CardToStr(int rank, int suit) {
     string cardStr;
-    if (rank >= 0 && rank <= 7) {
+    if (CARD_2 >= 0 && rank <= CARD_9) {
         stringstream tmpSs;
-        tmpSs << rank + 2;
+        tmpSs << rank + 1;
         cardStr.append(tmpSs.str());
     } else {
         switch (rank) {
@@ -237,8 +322,12 @@ string CardSet::CardToStr(int rank, int suit) {
     return cardStr;
 }
 
+inline void CardSet::ModyfiScoreByCardSignificance(int& score, int rank, int significance) {
+    score |= rank << ((significance - 1) * 4);
+}
+
 std::ostream& operator<<(std::ostream& os, const CardSet& cardSet) {
-    for (int i = 0; i < CARDS_CNT; i++) {
+    for (int i = CARD_2; i < CARDS_CNT; i++) {
         for (int j = 0; j < SUITS_CNT; j++) {
             if (cardSet.availableCards[i][j] == true)
                 os << cardSet.CardToStr(i, j) << " ";

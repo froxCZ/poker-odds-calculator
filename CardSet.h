@@ -39,6 +39,9 @@ private:
     int GotTwoPairs();
     int GotOnePair();
     int GotHighCard();
+    int GotN(int n);
+    int GetNonFigureHighestCard(int rank, int nToFind);
+    inline void ModyfiScoreByCardSignificance(int& score,int rank, int significance);
    
 
 };
