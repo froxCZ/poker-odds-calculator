@@ -50,15 +50,15 @@ void CardSet::AddCard(int rank,int suit) {
 
 int CardSet::GetFigureScore() {
     int score = 0;
-    if (score = GotStraightFlush())return score;
-    if (score = GotPoker())return score;
-    if (score = GotFullHouse())return score;
-    if (score = GotFlush())return score;
-    if (score = GotStraight())return score;
-    if (score = GotThree())return score;
-    if (score = GotTwoPairs())return score;
-    if (score = GotOnePair())return score;
-    if (score = GotHighCard())return score;
+    if ((score = GotStraightFlush()))return score;
+    if ((score = GotPoker()))return score;
+    if ((score = GotFullHouse()))return score;
+    if ((score = GotFlush()))return score;
+    if ((score = GotStraight()))return score;
+    if ((score = GotThree()))return score;
+    if ((score = GotTwoPairs()))return score;
+    if ((score = GotOnePair()))return score;
+    if ((score = GotHighCard()))return score;
     cout << "internal error: end of evaluate - should not happen!" << endl;
     return 0;
 }
@@ -79,8 +79,9 @@ int CardSet::GotStraightFlush() {
                 seqCnt = 0;
             }
         }
-        if (gotFigure)return STRAIGHT_FLUSH + iRank;
+        if (gotFigure)return STRAIGHT_FLUSH + iRank;        
     }
+    return 0;
 }
 
 int CardSet::GotPoker() {
@@ -163,7 +164,7 @@ int CardSet::GotStraight() {
 
 int CardSet::GotThree() {
     int rank;
-    if (rank = GotN(3)) {
+    if ((rank = GotN(3))) {
         int score = THREE;
         ModyfiScoreByCardSignificance(score, rank, 3);
         score += GetNonFigureHighestCard(rank, 2);
@@ -193,7 +194,7 @@ int CardSet::GotTwoPairs() {
 
 int CardSet::GotOnePair() {
     int rank;
-    if (rank = GotN(2)) {
+    if ((rank = GotN(2))) {
         int score = ONE_PAIR;
         ModyfiScoreByCardSignificance(score, rank, 4);
         score += GetNonFigureHighestCard(rank, 3);
