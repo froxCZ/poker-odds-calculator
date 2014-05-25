@@ -41,8 +41,14 @@ void Game::Reset() {
     turnCounter = START;
 }
 
-void Game::SetFlop(string card) {
-    table.AddCard(card);
+void Game::SetFlop(string card1, string card2, string card3) {
+    int rank, suit;
+    if (CardSet::StrToCard(card1, rank, suit) == false)return;
+    SetCardToAll(rank, suit);
+    if (CardSet::StrToCard(card2, rank, suit) == false)return;
+    SetCardToAll(rank, suit);
+    if (CardSet::StrToCard(card3, rank, suit) == false)return;
+    SetCardToAll(rank, suit);
     if (turnCounter != HAND_SET) {
         cout << "internal error - SetFlop NOT called after SetHand" << endl;
         return;
@@ -51,23 +57,36 @@ void Game::SetFlop(string card) {
 }
 
 void Game::SetHand(string card1, string card2) {
-    int rank,suit;    
-    if(CardSet::StrToCard(card1,rank,suit)==false)return;
-    SetPlayerCard(players[0],rank,suit);    
-    if(CardSet::StrToCard(card2,rank,suit)==false)return;
-    SetPlayerCard(players[0],rank,suit);
-    for(int iPlayer=1;iPlayer<playersCnt;iPlayer++){        
-        DrawCard(rank,suit);
-        SetPlayerCard(players[iPlayer],rank,suit);
-        DrawCard(rank,suit);
-        SetPlayerCard(players[iPlayer],rank,suit);        
-    }
+    int rank, suit;
+    if (CardSet::StrToCard(card1, rank, suit) == false)return;
+    SetCardToPlayer(players[0], rank, suit);
+    if (CardSet::StrToCard(card2, rank, suit) == false)return;
+    SetCardToPlayer(players[0], rank, suit);
     turnCounter = HAND_SET;
 }
-void Game::SetPlayerCard(CardSet*player,int rank, int suit){
-    player->AddCard(rank,suit);
+
+void Game::SetHandToOthers() {
+    int rank,suit;
+    for (int iPlayer = 1; iPlayer < playersCnt; iPlayer++) {
+        DrawCard(rank, suit);
+        SetCardToPlayer(players[iPlayer], rank, suit);
+        DrawCard(rank, suit);
+        SetCardToPlayer(players[iPlayer], rank, suit);
+    }
+}
+
+void Game::SetCardToPlayer(CardSet*player, int rank, int suit) {
+    player->AddCard(rank, suit);
     playedCards[rank][suit] = true;
 }
+
+void Game::SetCardToAll(int rank, int suit) {
+    for (int i = 0; i < playersCnt; i++) {
+        SetCardToPlayer(players[i], rank, suit);
+    }
+    SetCardToPlayer(&table, rank, suit);
+}
+
 bool Game::RunTurn() {
 
 
@@ -78,7 +97,7 @@ void Game::DrawCard(int& rank, int& suit) {
         rank = GenerateRandom(CARD_2, ACE);
         suit = GenerateRandom(0, SUITS_CNT);
     } while (playedCards[rank][suit] == true);
-    playedCards[rank][suit] = true;    
+    playedCards[rank][suit] = true;
 }
 
 inline int Game::GenerateRandom(int from, int to) {

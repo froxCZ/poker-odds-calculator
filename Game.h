@@ -27,9 +27,11 @@ public:
     void Reset(); //reset variables, deals cards, puts 3 cards on river    
     void FinishGame(); //runs turns to finish the game and prints results and winner.
     void SetHand(string card1, string card2);
-    void SetFlop(string card1);
-    void SetPlayerCard(CardSet*player,int rank, int suit);
+    void SetHandToOthers();
+    void SetFlop(string card1,string card2,string card3);
+    void SetCardToPlayer(CardSet*player,int rank, int suit);
 private:
+    void SetCardToAll(int rank,int suit);
     bool RunTurn(); //does one turn and returns true. If game finished, returns false
     void DrawCard(int&rank,int&suit);
     inline int GenerateRandom(int from, int to);
