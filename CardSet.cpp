@@ -45,7 +45,7 @@ void CardSet::AddCard(string cardStr) {
     cardsCnt++;
 }
 
-int CardSet::GetFigureRank() {
+int CardSet::GetFigureScore() {
     int score = 0;
     if (score = GotStraightFlush())return score;
     if (score = GotPoker())return score;

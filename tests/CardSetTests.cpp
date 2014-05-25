@@ -122,7 +122,7 @@ void FigureRankStraightFlushTest() {
     set1.AddCard("0c");
     set1.AddCard("8d");
     set1.AddCard("2s");
-    if (set1.GetFigureRank() != STRAIGHT_FLUSH + CARD_10) {
+    if (set1.GetFigureScore() != STRAIGHT_FLUSH + CARD_10) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankTest (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }
     set1.Reset();
@@ -133,7 +133,7 @@ void FigureRankStraightFlushTest() {
     set1.AddCard("0c");
     set1.AddCard("5s");
     set1.AddCard("2s");
-    if (set1.GetFigureRank() != STRAIGHT_FLUSH + CARD_2) {
+    if (set1.GetFigureScore() != STRAIGHT_FLUSH + CARD_2) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankTest (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }
     set1.Reset();
@@ -144,7 +144,7 @@ void FigureRankStraightFlushTest() {
     set1.AddCard("0c");
     set1.AddCard("5s");
     set1.AddCard("2s");
-    if (set1.GetFigureRank() >= STRAIGHT_FLUSH) {
+    if (set1.GetFigureScore() >= STRAIGHT_FLUSH) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankTest (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }
 }
@@ -157,7 +157,7 @@ void FigureRankPokerTest() {
     set1.AddCard("Kc");
     set1.AddCard("8s");
     set1.AddCard("8c");
-    if (set1.GetFigureRank() != POKER + (CARD_8 << 4) + ACE) {
+    if (set1.GetFigureScore() != POKER + (CARD_8 << 4) + ACE) {
         std::cout << "%TEST_FAILED% time=0 testname=PokerTest (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }
     CardSet set2;
@@ -166,7 +166,7 @@ void FigureRankPokerTest() {
     set2.AddCard("8h");
     set2.AddCard("8d");
     set2.AddCard("Qc");
-    if (set1.GetFigureRank() <= set2.GetFigureRank()) {
+    if (set1.GetFigureScore() <= set2.GetFigureScore()) {
         std::cout << "%TEST_FAILED% time=0 testname=PokerTest (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }
 
@@ -180,11 +180,11 @@ void FigureRankFullHouse() {
     cardSet.AddCard("2c");
     cardSet.AddCard("2d");
     cardSet.AddCard("9c");
-    if (cardSet.GetFigureRank() != FULL_HOUSE + (CARD_8 << 4) + CARD_2) {
+    if (cardSet.GetFigureScore() != FULL_HOUSE + (CARD_8 << 4) + CARD_2) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankTest (CardSetTests) message=Evaluating figure rank failed" << cardSet << endl;
     }
     cardSet.AddCard("9d");
-    if (cardSet.GetFigureRank() != FULL_HOUSE + (CARD_8 << 4) + CARD_9) {
+    if (cardSet.GetFigureScore() != FULL_HOUSE + (CARD_8 << 4) + CARD_9) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankTest (CardSetTests) message=Evaluating figure rank failed" << cardSet << endl;
     }
     CardSet set1;
@@ -194,13 +194,13 @@ void FigureRankFullHouse() {
     set1.AddCard("2c");
     set1.AddCard("2d");
     set1.AddCard("9c");
-    if (cardSet.GetFigureRank() <= set1.GetFigureRank()) {
+    if (cardSet.GetFigureScore() <= set1.GetFigureScore()) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankTest (CardSetTests) message=Evaluating figure rank failed" << cardSet << endl;
     }
     set1.AddCard("Ad");
     set1.AddCard("Ac");
     set1.AddCard("As");
-    if (set1.GetFigureRank() != FULL_HOUSE + (ACE << 4) + CARD_8) {
+    if (set1.GetFigureScore() != FULL_HOUSE + (ACE << 4) + CARD_8) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankTest (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }
 }
@@ -213,7 +213,7 @@ void FigureRankFlush() {
     set1.AddCard("8c");
     set1.AddCard("9c");
     set1.AddCard("0c");
-    if (set1.GetFigureRank() <= FLUSH || set1.GetFigureRank() >= FULL_HOUSE) {
+    if (set1.GetFigureScore() <= FLUSH || set1.GetFigureScore() >= FULL_HOUSE) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankTest (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }
     set2.AddCard("Ac");
@@ -221,7 +221,7 @@ void FigureRankFlush() {
     set2.AddCard("7c");
     set2.AddCard("9c");
     set2.AddCard("0c");
-    if (set1.GetFigureRank() <= set2.GetFigureRank()) {
+    if (set1.GetFigureScore() <= set2.GetFigureScore()) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankTest (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }
 }
@@ -234,7 +234,7 @@ void FigureRankStraight() {
     set1.AddCard("5s");
     set1.AddCard("6d");
     set1.AddCard("6h");
-    if (set1.GetFigureRank() >= FLUSH || set1.GetFigureRank() <= STRAIGHT) {
+    if (set1.GetFigureScore() >= FLUSH || set1.GetFigureScore() <= STRAIGHT) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankTest (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }
 }
@@ -243,26 +243,26 @@ void FigureRankPairs() {
     CardSet set1;
     CardSet set2;
     set1.AddCard("5c");
-    if (set1.GetFigureRank() <= HIGH_CARD || set1.GetFigureRank() >= ONE_PAIR) {
+    if (set1.GetFigureScore() <= HIGH_CARD || set1.GetFigureScore() >= ONE_PAIR) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankTest (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }
     set2.AddCard("6c");
-    if (set1.GetFigureRank() >= set2.GetFigureRank()) {
+    if (set1.GetFigureScore() >= set2.GetFigureScore()) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankTest (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }
     set1.AddCard("5h");
-    cout << set1.GetFigureRank() << endl;
-    if (set1.GetFigureRank() >= TWO_PAIRS || set1.GetFigureRank() <= ONE_PAIR) {
+    cout << set1.GetFigureScore() << endl;
+    if (set1.GetFigureScore() >= TWO_PAIRS || set1.GetFigureScore() <= ONE_PAIR) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankTest (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }
-    if (set1.GetFigureRank() <= set2.GetFigureRank()) {
+    if (set1.GetFigureScore() <= set2.GetFigureScore()) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankTest (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }
     set2.AddCard("5s");
     set2.AddCard("5h");
     set1.AddCard("6h");
     set1.AddCard("Ad");
-    if (set1.GetFigureRank() <= set2.GetFigureRank()) {
+    if (set1.GetFigureScore() <= set2.GetFigureScore()) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankTest (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }
 
@@ -277,16 +277,16 @@ void FigureRankHighestCards() {
     set2.AddCard("7s");
     set2.AddCard("6s");
     set2.AddCard("8s");
-    if (set1.GetFigureRank() >= set2.GetFigureRank()) {
+    if (set1.GetFigureScore() >= set2.GetFigureScore()) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankHighestCards (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }
     set1.AddCard("Ac");
-    if (set1.GetFigureRank() <= set2.GetFigureRank()) {
+    if (set1.GetFigureScore() <= set2.GetFigureScore()) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankHighestCards (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }    
     set1.AddCard("2c");
     set2.AddCard("Ad");
-    if (set1.GetFigureRank() >= set2.GetFigureRank()) {
+    if (set1.GetFigureScore() >= set2.GetFigureScore()) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankHighestCards (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
     }    
     

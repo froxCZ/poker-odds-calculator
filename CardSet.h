@@ -24,7 +24,7 @@ public:
     CardSet(const CardSet& orig);
     void Reset();
     void AddCard(string cardStr);
-    int GetFigureRank();
+    int GetFigureScore();
     virtual ~CardSet();
     friend std::ostream& operator<<(std::ostream& os, const CardSet& obj);
     static bool StrToCard(string&str,int&rank,int&suit);
