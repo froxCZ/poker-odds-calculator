@@ -177,7 +177,7 @@ int CardSet::GotThree() {
 }
 
 int CardSet::GotTwoPairs() {
-    int score = 0;
+    int score = TWO_PAIRS;
     int pairsToFind = 2;
     int otherToFind = 1;
     for (int iRank = ACE; iRank >= CARD_2; iRank--) {

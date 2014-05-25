@@ -84,6 +84,31 @@ void FigureRankTest() {
     FigureRankHighestCards();
 }
 
+void ComplexScoreTests() {
+    CardSet set1;
+    CardSet set2;
+    set1.AddCard("4h");
+    set1.AddCard("4s");
+    set1.AddCard("8c");
+    set1.AddCard("9c");
+    set1.AddCard("Jh");
+    set1.AddCard("Js");
+    set1.AddCard("Ad");
+
+    set2.AddCard("4s");
+    set2.AddCard("6d");
+    set2.AddCard("8c");
+    set2.AddCard("9d");
+    set2.AddCard("9c");
+    set2.AddCard("Jh");
+    set2.AddCard("Ad");
+    cout << set1.GetFigureScore() << endl;
+    cout << set2.GetFigureScore() << endl;
+    if (set1.GetFigureScore() <= set2.GetFigureScore()) {
+        std::cout << "%TEST_FAILED% time=0 testname=ComplexScoreTests (CardSetTests) message=AddHand failed. Expected hand should be: " << set1 << endl;
+    }
+}
+
 int main(int argc, char** argv) {
     std::cout << "%SUITE_STARTING% CardSetTests" << std::endl;
     std::cout << "%SUITE_STARTED%" << std::endl;
@@ -108,6 +133,9 @@ int main(int argc, char** argv) {
     FigureRankTest();
     std::cout << "%TEST_FINISHED% time=0 FigureRankTest (CardSetTests)" << std::endl;
 
+    std::cout << "%TEST_STARTED% ComplexScoreTests (CardSetTests)\n" << std::endl;
+    ComplexScoreTests();
+    std::cout << "%TEST_FINISHED% time=0 ComplexScoreTests (CardSetTests)" << std::endl;
     std::cout << "%SUITE_FINISHED% time=0" << std::endl;
 
     return (EXIT_SUCCESS);
@@ -283,11 +311,11 @@ void FigureRankHighestCards() {
     set1.AddCard("Ac");
     if (set1.GetFigureScore() <= set2.GetFigureScore()) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankHighestCards (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
-    }    
+    }
     set1.AddCard("2c");
     set2.AddCard("Ad");
     if (set1.GetFigureScore() >= set2.GetFigureScore()) {
         std::cout << "%TEST_FAILED% time=0 testname=FigureRankHighestCards (CardSetTests) message=Evaluating figure rank failed" << set1 << endl;
-    }    
-    
+    }
+
 }
