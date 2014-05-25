@@ -24,10 +24,8 @@ void SetHandAndFlopTest() {
     }    
     ss.str("");
     ss.clear();
-    game.SetFlop("9c");
-    game.SetFlop("Ks");
-    game.SetFlop("8d");
-    expected = "Table:\t\t8d 9c Ks \nplayer0:\t2d Ac \n";
+    game.SetFlop("9c","Ks","8d");
+    expected = "Table:\t\t8d 9c Ks \nplayer0:\t2d 8d 9c Ks Ac \n";
     ss<<game;
     if(expected!=ss.str()){
         std::cout << "%TEST_FAILED% time=0 testname=SetHandAndFlopTest (GameTests) message=SetHand failed. Expected out: \n" << expected << "but was: \n" << ss.str() << std::endl;        
