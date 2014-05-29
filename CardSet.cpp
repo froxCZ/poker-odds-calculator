@@ -234,7 +234,6 @@ int CardSet::GetNonFigureHighestCard(int rank, int nToFind) {
 
 bool CardSet::StrToCard(string& str, int& rank, int& suit) {
     if (str.length() != 2) {
-        cout << "strToCard error" << endl;
         return false;
     }
     char cardChar = str[0];
@@ -259,7 +258,6 @@ bool CardSet::StrToCard(string& str, int& rank, int& suit) {
                 rank = ACE;
                 break;
             default:
-                cout << "strToCard error" << endl;
                 return false;
         }
     }
@@ -277,7 +275,6 @@ bool CardSet::StrToCard(string& str, int& rank, int& suit) {
             suit = SPADES;
             break;
         default:
-            cout << "strToCard error" << endl;
             return false;
     }
     return true;

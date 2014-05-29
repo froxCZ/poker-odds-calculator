@@ -15,17 +15,19 @@ public:
     string f1,f2,f3,f4,f5;
     bool run;
     int players;
-    int cardCounter = 0;
+    int cardCounter;
+    static bool bSimulate;
     InterativeController();
     InterativeController(const InterativeController& orig);
     virtual ~InterativeController();
     void Run();    
     void Finish();
+    static void StopSimulation(int signal);
 private:
     void Reset();
     void Simulate();
-    void LoadCmd(string&cmd);
     void ExecuteCmd(string cmd);
+    bool IsGameInitialized();    
 
 };
 
