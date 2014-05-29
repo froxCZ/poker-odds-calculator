@@ -7,8 +7,8 @@ run: all
 	./$(TARGET)
 all: compile
 compile: $(TARGET)
-$(TARGET): CardSet.o Game.o main.o
-	$(GXX) CardSet.o Game.o main.o -o $(TARGET) $(LIBS)
+$(TARGET): CardSet.o Game.o InteractiveController.o main.o
+	$(GXX) CardSet.o Game.o InteractiveController.o main.o -o $(TARGET) $(LIBS)
 
 main.o: main.cpp
 	$(GXX) $(CFLAGS) -MMD -MP -MF main.o.d main.cpp	
@@ -16,7 +16,9 @@ CardSet.o: CardSet.cpp
 	$(GXX) $(CFLAGS) -MMD -MP -MF CardSet.o.d CardSet.cpp	
 Game.o: Game.cpp
 	$(GXX) $(CFLAGS) -MMD -MP -MF Game.o.d Game.cpp
+InteractiveController.o: InteractiveController.cpp
+	$(GXX) $(CFLAGS) -MMD -MP -MF InteractiveController.o.d InteractiveController.cpp
 
 clean:
-	rm -rf Game.o main.o CardSet.o Game.o.d main.o.d CardSet.o.d
+	rm -rf Game.o main.o CardSet.o Game.o.d main.o.d CardSet.o.d InteractiveController.o InteractiveController.o.d
 

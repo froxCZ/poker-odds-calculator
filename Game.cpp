@@ -42,8 +42,7 @@ void Game::Reset() {
     sharedCards = 0;
 }
 
-void Game::SetFlop(string card1, string card2, string card3) {
-    int rank, suit;
+void Game::SetFlop(string card1, string card2, string card3) {    
     if (turnCounter != HAND_SET) {
         cout << "internal error - SetFlop NOT called after SetHand" << endl;
         return;

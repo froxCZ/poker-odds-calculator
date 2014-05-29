@@ -5,7 +5,7 @@
  * Created on May 25, 2014, 2:54 PM
  */
 
-#include "InterativeController.h"
+#include "InteractiveController.h"
 #include <sstream>
 #include <iostream>
 using namespace std;
@@ -23,11 +23,17 @@ InterativeController::~InterativeController() {
 void InterativeController::Run() {
     stringstream ss;
     string cmd;
-    int n;
+    int cardCounter=0;
     while (true) {
         cin >> cmd;
+        if(cmd=="add"){
+            if(cardCounter==0)cmd="flop";
+            if(cardCounter==3)cmd="turn";
+            if(cardCounter==4)cmd="river";
+        }
         if (cmd == "new") {
             Reset();
+            cardCounter = 0;
             cout << "players: ";
             cin >> players;
             game = new Game(players);
@@ -41,20 +47,23 @@ void InterativeController::Run() {
             cin >> f2;
             cin >> f3;
             Simulate();
+            cardCounter+=3;
         } else if (cmd == "turn") {
             cout << "turn card4: ";
             cin >> f4;
             Simulate();
+            cardCounter++;
         } else if (cmd == "river") {
             cout << "river card5: ";
             cin >> f5;
             Simulate();
+            cardCounter++;
         } else if (cmd == "p") {
             cout << "enter players number: ";
             cin >> players;
             delete game;
             game = new Game(players);
-        }else if(cmd == "simulate"){
+        }else if(cmd == "sml"){
             Simulate();
         }
     }
@@ -72,7 +81,7 @@ void InterativeController::Reset() {
 }
 
 void InterativeController::Simulate() {
-    int gamesToPlay = 100000;
+    int gamesToPlay = 100;
     int iWon = 0;
     for (int i = 0; i < gamesToPlay; i++) {
         game->Reset();
